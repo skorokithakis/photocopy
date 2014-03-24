@@ -15,6 +15,7 @@ import exifread
 import logging
 import os
 import re
+import sys
 import shutil
 
 from docopt import docopt
@@ -46,7 +47,13 @@ def get_created_date(filename):
     return created_date
 
 
-def main(arguments):
+def main(args=None):
+    if args is None:
+        args = sys.argv[1:]
+
+    arguments = docopt(__doc__, argv=args, version="0.0.1")
+    set_up_logging(arguments)
+
     source_dir = arguments["<source_dir>"]
     destination_dir = arguments["<destination_dir>"]
 
@@ -66,6 +73,4 @@ def main(arguments):
 
 
 if __name__ == "__main__":
-    arguments = docopt(__doc__, version="0.0.1")
-    set_up_logging(arguments)
-    main(arguments)
+    main()
