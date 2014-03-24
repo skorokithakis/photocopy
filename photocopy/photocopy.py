@@ -19,6 +19,7 @@ import sys
 import shutil
 
 from docopt import docopt
+from .version import VERSION
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +52,7 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
 
-    arguments = docopt(__doc__, argv=args, version="0.0.1")
+    arguments = docopt(__doc__, argv=args, version=VERSION)
     set_up_logging(arguments)
 
     source_dir = arguments["<source_dir>"]
