@@ -3,11 +3,13 @@
   photocopy.py [options] <source_dir> <destination_dir>
 
 Options:
-  -h --help               show this help and exit
-  -v --version            show version and exit
-  -d --dry-run            show what will happen
+  -h --help                show this help and exit
+  -v --version             show version and exit
+  -d --dry-run             show what will happen
+  -f --date-format=FORMAT  the date format to use [default: %Y-%M-%D]
 """
 
+import datetime
 import exifread
 import os
 import shutil
@@ -23,8 +25,8 @@ def main(arguments):
         source = os.path.join(source_dir, file)
         image = open(source, "rb")
         tags = exifread.process_file(image, details=False, stop_tag="Image DateTime")
-        date = tags["Image DateTime"].values.split()[0].replace(":", "-")
-        destination = os.path.join(destination_dir, date)
+        date = datetime.datetime.strptime(tags["Image DateTime"].values, "%Y:%m:%d %H:%M:%S")
+        destination = os.path.join(destination_dir, date.strftime(arguments["--date-format"]))
         if not os.path.isdir(destination):
             os.makedirs(destination)
         print "Moving %s to %s..." % (source, destination)
