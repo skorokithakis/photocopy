@@ -7,14 +7,43 @@ Options:
   -v --version             show version and exit
   -d --dry-run             show what will happen
   -f --date-format=FORMAT  the date format to use [default: %Y-%M-%D]
+     --verbose             talk more
 """
 
 import datetime
 import exifread
+import logging
 import os
+import re
 import shutil
 
 from docopt import docopt
+
+logger = logging.getLogger(__name__)
+
+
+def set_up_logging(arguments):
+    if arguments["--verbose"]:
+        level = logging.DEBUG
+    else:
+        level = logging.INFO
+
+    logger.setLevel(level)
+    ch = logging.StreamHandler()
+    ch.setLevel(level)
+    formatter = logging.Formatter('%(message)s')
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+
+
+def get_created_date(filename):
+    if re.search("\.(jpeg|jpg|cr2)$", filename.lower()):
+        image = open(filename, "rb")
+        tags = exifread.process_file(image, details=False, stop_tag="Image DateTime")
+        created_date = datetime.datetime.strptime(tags["Image DateTime"].values, "%Y:%m:%d %H:%M:%S")
+    else:
+        created_date = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
+    return created_date
 
 
 def main(arguments):
@@ -23,17 +52,20 @@ def main(arguments):
 
     for file in os.listdir(source_dir):
         source = os.path.join(source_dir, file)
-        image = open(source, "rb")
-        tags = exifread.process_file(image, details=False, stop_tag="Image DateTime")
-        date = datetime.datetime.strptime(tags["Image DateTime"].values, "%Y:%m:%d %H:%M:%S")
-        destination = os.path.join(destination_dir, date.strftime(arguments["--date-format"]))
-        if not os.path.isdir(destination):
+        logger.debug("Examining %s..." % source)
+
+        created_date = get_created_date(source)
+        logger.debug("Creation date is %s." % created_date)
+
+        destination = os.path.join(destination_dir, created_date.strftime(arguments["--date-format"]))
+        if not os.path.isdir(destination) and not arguments.get("--dry-run"):
             os.makedirs(destination)
-        print "Moving %s to %s..." % (source, destination)
+        logger.info("Moving %s to %s..." % (source, destination))
         if not arguments.get("--dry-run"):
             shutil.move(source, destination)
 
 
 if __name__ == "__main__":
     arguments = docopt(__doc__, version="0.0.1")
+    set_up_logging(arguments)
     main(arguments)
