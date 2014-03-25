@@ -6,6 +6,7 @@ Options:
   -h --help                show this help and exit
   -v --version             show version and exit
   -d --dry-run             show what will happen
+  -m --move                move files instead of copying
   -f --date-format=FORMAT  the date format to use [default: %Y-%M-%D]
      --verbose             talk more
 """
@@ -68,9 +69,14 @@ def main(args=None):
         destination = os.path.join(destination_dir, created_date.strftime(arguments["--date-format"]))
         if not os.path.isdir(destination) and not arguments.get("--dry-run"):
             os.makedirs(destination)
-        logger.info("Moving %s to %s..." % (source, destination))
-        if not arguments.get("--dry-run"):
-            shutil.move(source, destination)
+        if arguments.get("--move"):
+            logger.info("Moving: %s -> %s..." % (source, destination))
+            if not arguments.get("--dry-run"):
+                shutil.move(source, destination)
+        else:
+            logger.info("Copying: %s -> %s..." % (source, destination))
+            if not arguments.get("--dry-run"):
+                shutil.copy(source, destination)
 
 
 if __name__ == "__main__":
