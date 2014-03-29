@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from setuptools import setup
-from photocopy import VERSION
+from photocopy.version import VERSION
 
 setup(
     name="photocopy",
