@@ -4,11 +4,11 @@
 
 Options:
   -h --help                show this help and exit
-  -v --version             show version and exit
+     --version             show version and exit
   -d --dry-run             show what will happen
   -m --move                move files instead of copying
   -f --date-format=FORMAT  the date format to use [default: %Y-%M-%D]
-     --verbose             talk more
+  -v --verbose             talk more
 """
 
 import datetime
