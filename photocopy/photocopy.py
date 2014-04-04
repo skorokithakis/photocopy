@@ -3,12 +3,14 @@
   photocopy.py [options] <source_dir> <destination_dir>
 
 Options:
-  -h --help                show this help and exit
-     --version             show version and exit
-  -d --dry-run             show what will happen
-  -m --move                move files instead of copying
-  -f --date-format=FORMAT  the date format to use [default: %Y-%m-%d]
-  -v --verbose             talk more
+  -h --help                Show this help and exit.
+     --version             Show version and exit.
+  -d --dry-run             Show what will happen.
+  -e --event=EVENT         The name of the event in the photos. A subdirectory will be created for this event in the
+                           original directory.
+  -m --move                Move files instead of copying.
+  -f --date-format=FORMAT  The date format to use [default: %Y-%m-%d].
+  -v --verbose             Talk more.
 """
 
 import datetime
@@ -67,8 +69,16 @@ def main(args=None):
         logger.debug("Creation date is %s." % created_date)
 
         destination = os.path.join(destination_dir, created_date.strftime(arguments["--date-format"]))
+        if arguments["--event"]:
+            destination = os.path.join(destination, arguments["--event"])
         if not os.path.isdir(destination) and not arguments.get("--dry-run"):
             os.makedirs(destination)
+
+        dest_filename = os.path.join(destination, os.path.basename(source))
+        if os.path.exists(dest_filename):
+            logger.info("Destination file %s already exists, skipping." % dest_filename)
+            continue
+
         if arguments.get("--move"):
             logger.info("Moving: %s -> %s..." % (source, destination))
             if not arguments.get("--dry-run"):
