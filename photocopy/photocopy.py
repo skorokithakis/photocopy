@@ -42,11 +42,15 @@ def set_up_logging(arguments):
 
 
 def get_created_date(filename):
+    created_date = None
     if re.search("\.(jpeg|jpg|cr2)$", filename.lower()):
         image = open(filename, "rb")
         tags = exifread.process_file(image, details=False, stop_tag="Image DateTime")
-        created_date = datetime.datetime.strptime(tags["Image DateTime"].values, "%Y:%m:%d %H:%M:%S")
-    else:
+        read_date = tags["Image DateTime"].values or tags["EXIF DateTimeOriginal"].values or tags["EXIF DateTimeDigitized"].values
+        if read_date:
+            created_date = datetime.datetime.strptime(read_date, "%Y:%m:%d %H:%M:%S")
+
+    if not created_date:
         created_date = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
     return created_date
 
