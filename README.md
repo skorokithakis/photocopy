@@ -3,6 +3,16 @@ photocopy
 
 A script to archive photos off a camera to a directory.
 
+Installation
+------------
+
+Just run:
+
+    pip install photocopy
+
+To install the software. You're ready to use it!
+
+
 Usage
 -----
 What photocopy does is read the EXIF data from images and copy the latter to a
