@@ -1,4 +1,8 @@
-from .version import VERSION
+"""
+Copy your photos from an SD card or camera to a specific directory.
+"""
+
+from .version import VERSION, __version__
 try:
     from .photocopy import main
 except ImportError:

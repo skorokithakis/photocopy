@@ -1,0 +1,18 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "photocopy"
+author = "Stavros Korokithakis"
+author-email = "hi@stavros.io"
+description-file = "README.md"
+requires = [
+    "docopt >=0.6.2",
+    "exifread >=2.1.2",
+]
+home-page = "https://github.com/skorokithakis/photocopy/"
+classifiers = ["License :: OSI Approved :: MIT License"]
+
+[tool.flit.scripts]
+photocopy = "photocopy:main"
