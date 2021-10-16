@@ -71,7 +71,10 @@ created new destination subdir: target/2021_10_02
   IMG_6982.PNG already exists in target/2021_08_24
   IMG_6983.PNG already exists in target/2021_08_24
   ----------------------------------------------------------------------Ended: 2021/10/14  14:06:41
+
+  
   `
+![Plain log](../master/doc/log01.png)
 
 #### Debug, verbose logging
 `
@@ -96,6 +99,7 @@ Folder: Z:photosync\iPhone\Recents
  ----------------------------------------------------------------------Ended: 2021/10/14 15:14:50
  `
 
+![Debug log](../master/doc/log1.png)
 
  File Formats
  -------------
