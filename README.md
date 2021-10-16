@@ -39,67 +39,15 @@ Examples of log entries
 ------------------------
 
 #### Plain info logging
-`
-----------------------------------------PhotoCopy version:1.0 Started: 2021/10/14 14:06:39
-Folder: Z:photosync
-Folder: Z:photosync\iPhone
-Folder: Z:photosync\iPhone\PhotoSync
-created new destination subdir: target/2021_08_23
-  IMG_6981.mov                                2021-08-23 18:42:23 copied target/2021_08_23
-Folder: Z:photosync\iPhone\Recents
-created new destination subdir: target/2021_09_09
-  65290110486__1175F04C-E756-4903-BF56-3261BA75BA49.JPG             2021-09-09 13:25:04 copied target/2021_09_09
-  65290110486__1175F04C-E756-4903-BF56-3261BA75BA49.MOV             2021-09-09 17:25:04 copied target/2021_09_09
-  65290731478__2DD52CCB-D29B-426B-ABAC-95969EA5F3AC.JPG             2021-09-09 15:08:34 copied target/2021_09_09
-  65290731478__2DD52CCB-D29B-426B-ABAC-95969EA5F3AC.MOV             2021-09-09 19:08:34 copied target/2021_09_09
-created new destination subdir: target/2021_10_01
-  IMG_0002.JPG                                2021-10-01 15:39:13 copied target/2021_10_01
-  IMG_0002.MOV                                2021-10-01 19:39:14 copied target/2021_10_01
-created new destination subdir: target/2021_10_02
-  IMG_0003.MOV                                2021-10-02 03:08:11 copied target/2021_10_02
-  IMG_0004.PNG                      no EXIF     skipped
-  IMG_0005.PNG                      no EXIF     skipped
-  IMG_0006.JPG                                2021-10-02 07:21:22 copied target/2021_10_02
-  IMG_0007.JPG                                2021-10-02 07:21:28 copied target/2021_10_02
-  IMG_0007.MOV                                2021-10-02 11:21:28 copied target/2021_10_02
-  IMG_0008.JPG                                2021-10-02 08:04:43 copied target/2021_10_02
-  IMG_0008.MOV                                2021-10-02 12:04:43 copied target/2021_10_02
-  IMG_0009.JPG                                2021-10-02 08:05:04 copied target/2021_10_02
-  Folder: Z:photosync\iPhone\Recents
-  IMG_0004.PNG already exists in target/2021_10_02
-  IMG_0005.PNG already exists in target/2021_10_02
-  IMG_6982.PNG already exists in target/2021_08_24
-  IMG_6983.PNG already exists in target/2021_08_24
-  ----------------------------------------------------------------------Ended: 2021/10/14  14:06:41
 
-  
-  `
 ![Plain log](../master/doc/log01.png)
 
+
 #### Debug, verbose logging
-`
-----------------------------------------PhotoCopy version:1.0 Started: 2021/10/14 15:14:44
-options: {'--date-format': '%Y-%m-%d',
- '--exifOnly': 'no',
- '--extense': 'png',
- '--help': False,
- '--move': 'no',
- '--verbose': True,
- '--version': '1.0',
- '<destination_dir>': 'target/',
- '<source_dir>': 'Z:photosync'}
-Folder: Z:photosync
-  0000JZASTROW-LTP10.png already exists in target/2021_10_14
-Folder: Z:photosync\iPhone
-Folder: Z:photosync\iPhone\PhotoSync
-Folder: Z:photosync\iPhone\Recents
-  IMG_0004.PNG already exists in target/2021_10_02
-  IMG_0005.PNG already exists in target/2021_10_02
-  IMG_6982.PNG already exists in target/2021_08_24
- ----------------------------------------------------------------------Ended: 2021/10/14 15:14:50
- `
 
 ![Debug log](../master/doc/log1.png)
+
+
 
  File Formats
  -------------
