@@ -39,6 +39,7 @@ Examples of log entries
 ------------------------
 
 #### Plain info logging
+`
 ----------------------------------------PhotoCopy version:1.0 Started: 2021/10/14 14:06:39
 Folder: Z:photosync
 Folder: Z:photosync\iPhone
@@ -70,9 +71,11 @@ created new destination subdir: target/2021_10_02
   IMG_6982.PNG already exists in target/2021_08_24
   IMG_6983.PNG already exists in target/2021_08_24
   ----------------------------------------------------------------------Ended: 2021/10/14  14:06:41
+  `
 
 #### Debug, verbose logging
-  ----------------------------------------PhotoCopy version:1.0 Started: 2021/10/14 15:14:44
+`
+----------------------------------------PhotoCopy version:1.0 Started: 2021/10/14 15:14:44
 options: {'--date-format': '%Y-%m-%d',
  '--exifOnly': 'no',
  '--extense': 'png',
@@ -91,6 +94,7 @@ Folder: Z:photosync\iPhone\Recents
   IMG_0005.PNG already exists in target/2021_10_02
   IMG_6982.PNG already exists in target/2021_08_24
  ----------------------------------------------------------------------Ended: 2021/10/14 15:14:50
+ `
 
 
  File Formats
@@ -100,44 +104,44 @@ This version of photocopy uses the hachoir software to extract EXIF metadata. Ha
 file formats as of version 3.1.3 in February 2021.
 
 #### Archive
-• bzip2: bzip2 archive
-• cab: Microsoft Cabinet archive
-• gzip: gzip archive
-• mar: Microsoft Archive
-• tar: TAR archive
-• zip: ZIP archive
+ *  bzip2: bzip2 archive
+ *  cab: Microsoft Cabinet archive
+ *  gzip: gzip archive
+ *  mar: Microsoft Archive
+ *  tar: TAR archive
+ *  zip: ZIP archive
 #### Audio
-• aiff: Audio Interchange File Format (AIFF)
-• mpeg_audio: MPEG audio version 1, 2, 2.5
-• real_audio: Real audio (.ra)
-• sun_next_snd: Sun/NeXT audio
+ *  aiff: Audio Interchange File Format (AIFF)
+ *  mpeg_audio: MPEG audio version 1, 2, 2.5
+ *  real_audio: Real audio (.ra)
+ *  sun_next_snd: Sun/NeXT audio
 #### Container
-• matroska: Matroska multimedia container
-• ogg: Ogg multimedia container
-• real_media: !RealMedia (rm) Container File
-• riff: Microsoft RIFF container
+ *  matroska: Matroska multimedia container
+ *  ogg: Ogg multimedia container
+ *  real_media: !RealMedia (rm) Container File
+ *  riff: Microsoft RIFF container
 #### Image
-• bmp: Microsoft bitmap (BMP) picture
-• gif: GIF picture
-• ico: Microsoft Windows icon or cursor
-• jpeg: JPEG picture
-• pcx: PC Paintbrush (PCX) picture
-• png: Portable Network Graphics (PNG) picture
-• psd: Photoshop (PSD) picture
-• targa: Truevision Targa Graphic (TGA)
-• tiff: TIFF picture
-• wmf: Microsoft Windows Metafile (WMF)
-• xcf: Gimp (XCF) picture
+ *  bmp: Microsoft bitmap (BMP) picture
+ *  gif: GIF picture
+ *  ico: Microsoft Windows icon or cursor
+ *  jpeg: JPEG picture
+ *  pcx: PC Paintbrush (PCX) picture
+ *  png: Portable Network Graphics (PNG) picture
+ *  psd: Photoshop (PSD) picture
+ *  targa: Truevision Targa Graphic (TGA)
+ *  tiff: TIFF picture
+ *  wmf: Microsoft Windows Metafile (WMF)
+ *  xcf: Gimp (XCF) picture
 #### Misc
-• ole2: Microsoft Office document
-• pcf: X11 Portable Compiled Font (pcf)
-• torrent: Torrent metainfo file
-• ttf: !TrueType font
+ *  ole2: Microsoft Office document
+ *  pcf: X11 Portable Compiled Font (pcf)
+ *  torrent: Torrent metainfo file
+ *  ttf: !TrueType font
 #### Program
-• exe: Microsoft Windows Portable Executable
+ *  exe: Microsoft Windows Portable Executable
 #### Video
-• asf: Advanced Streaming Format (ASF), used for WMV (video) and WMA (audio)
-• flv: Macromedia Flash video
-• mov: Apple !QuickTime movie
-• mp4: [seems to work too]
+ *  asf: Advanced Streaming Format (ASF), used for WMV (video) and WMA (audio)
+ *  flv: Macromedia Flash video
+ *  mov: Apple !QuickTime movie
+ *  mp4: [seems to work too]
 
