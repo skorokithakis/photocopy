@@ -119,7 +119,7 @@ def main(args=None):
 
 def recursive_walk(folder):
     for folderName, subfolders, filenames in os.walk(folder):
-        logger.info("Folder: " + folderName)
+        logger.info("Source Folder: " + folderName)
         for filename in filenames:
             file_details = os.path.splitext(filename)
             file_extension = file_details[1].lower()

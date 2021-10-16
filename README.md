@@ -31,7 +31,7 @@ You run it with:
 
     ./photocopy.py /media/sdcard/ /home/user/Photos/
 
-and it will copy the photos to directories called "2014-03-12" by default.
+and it will copy the photos to directories called "2014_03_12" by default.
 See the source file for more examples.
 
 
