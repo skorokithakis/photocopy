@@ -1,35 +1,48 @@
 #!/usr/bin/env python
-"""Usage:
+usage = """Usage:
   photocopy.py [options] <source_dir> <destination_dir>
 
 Options:
   -h --help                Show this help and exit.
-     --version             Show version and exit.
-  -d --dry-run             Show what will happen.
-  -j --ignore-jpg          Ignore (or delete when moving) JPG files when a RAW file with the same name exists.
-  -e --event=EVENT         The name of the event in the photos. A subdirectory will be created for this event in the
-                           original directory.
-  -m --move                Move files instead of copying.
-  -f --date-format=FORMAT  The date format to use [default: %Y-%m-%d].
+  -j --extense=str         Extention list - comma separated [default: jpeg,jpg]. Supports all extensions of hachoir
+  -m --move=str            move files (--move=yes) or copy (--move=no) [default: no, copy instead]
   -v --verbose             Talk more.
+  -x --exifOnly=str        skip file processing if no EXIF (--exifOnly =yes)
+                           or process files with no EXIF (--exifOnly =no)
+                           or Only process files with no EXIF (--exifOnly =fs) [default: yes]
+
+Examples:
+    1. Simple. Copy jpg or JPG files from source (Z:\photosync) to target into folders
+       named YYYY_MM_DD using the EXIF Creation Date in the JPG files. Ignore files without
+       EXIF date, but log everything.
+        # python photocopy.py -j jpg Z:\photosync target/
+
+    2. More complex. Move (-m yes) files by extensions shown from source (Z:\photosync) to target into folders   
+        named YYYY_MM_DD using the EXIF Creation Date in the files. File without EXIF date will use the file
+        system creation date to name target folders. Log everything.
+        # python photocopy.py -m yes -x no -j gif,png,jpg,mov,mp4 Z:\photosync target/
 """
 
 import datetime
-import glob
 import logging
 import os
-import re
-import shutil
 import sys
+import shutil
 
-import exifread
 from docopt import docopt
 
-from .version import VERSION
+from hachoir.parser import createParser
+from hachoir.metadata import extractMetadata
+from hachoir.core import config
+
+config.quiet = True
 
 logger = logging.getLogger(__name__)
 
-RAW_EXTENSIONS = ("cr2", "arw", "dng")
+destination_dir = ""
+extList = []
+actMove = "no"
+exifOnly = ""
 
 
 def set_up_logging(arguments):
@@ -37,9 +50,9 @@ def set_up_logging(arguments):
         level = logging.DEBUG
     else:
         level = logging.INFO
-
+    logfile = os.path.join(destination_dir, "events.log")
     logger.setLevel(level)
-    ch = logging.StreamHandler()
+    ch = logging.FileHandler(logfile)
     ch.setLevel(level)
     formatter = logging.Formatter("%(message)s")
     ch.setFormatter(formatter)
@@ -48,87 +61,114 @@ def set_up_logging(arguments):
 
 def get_created_date(filename):
     created_date = None
-    if re.search("\.(jpeg|jpg|%s)$" % "|".join(RAW_EXTENSIONS), filename.lower()):
-        logger.debug("  File probably has an EXIF tag, checking...")
-        image = open(filename, "rb")
-        tags = exifread.process_file(image, details=False, stop_tag="Image DateTime")
-        read_date = (
-            tags["Image DateTime"].values
-            or tags["EXIF DateTimeOriginal"].values
-            or tags["EXIF DateTimeDigitized"].values
-        )
-        if read_date:
-            created_date = datetime.datetime.strptime(read_date, "%Y:%m:%d %H:%M:%S")
+    parser = createParser(filename)
+    if not parser:
+        logger.debug("Unable to parse file")
 
-    if not created_date:
-        created_date = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
+    with parser:
+        try:
+            metadata = extractMetadata(parser)
+        except Exception as err:
+            logger.debug("Metadata extraction error: %s" % err)
+            metadata = None
+        if not metadata:
+            logger.debug("Unable to extract metadata")
+        else:
+            cd = metadata.getValues("creation_date")
+            if len(cd) > 0:
+                created_date = cd[0]
     return created_date
 
 
-def file_sorting_key(filename):
-    """
-    Extract a key for a filename sort, putting JPEGs before everything else.
-    """
-    extension = filename.lower()[filename.rfind(".") + 1 :]
-    key = 0 if extension in ("jpg", "jpeg") else 1
-    return (key, filename)
-
-
 def main(args=None):
+    global destination_dir, extList, actMove, exifOnly
     if args is None:
         args = sys.argv[1:]
+    arguments = docopt(usage)
 
-    arguments = docopt(__doc__, argv=args, version=VERSION)
-    set_up_logging(arguments)
+    # get file extensions from options
+    extensions = arguments["--extense"]
+    extList = extensions.split(",")
+    extList[:] = ["." + x for x in extList]
+    # Options flags
+    actMove = arguments["--move"]
+    exifOnly = arguments["--exifOnly"]
 
     source_dir = arguments["<source_dir>"]
     destination_dir = arguments["<destination_dir>"]
-    files_in_source = sorted(os.listdir(source_dir), key=file_sorting_key)
+    set_up_logging(arguments)
+    # job started
+    logger.info(
+        50 * "-" + " Started: " + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    )
+    logger.debug("options: " + str(arguments))
+    if not os.path.isdir(destination_dir):
+        os.makedirs(destination_dir)
+        logger.info("created: " + destination_dir)
+    if os.path.isdir(source_dir):
+        # main recursive function to process files
+        recursive_walk(source_dir)
+    else:
+        logger.info("source dir not exists: " + source_dir)
+    # job ended
+    logger.info(
+        70 * "-" + "Ended: " + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    )
+    logging.shutdown()
 
-    for file in files_in_source:
-        file_extension = file[file.rfind(".") + 1 :].lower()
-        source = os.path.join(source_dir, file)
-        logger.debug("Examining %s..." % source)
 
-        if arguments["--ignore-jpg"] and file_extension in ("jpg", "jpeg"):
-            # Discover other files with the same extension.
-            files = glob.glob(source[: source.rfind(".")] + ".*")
-            extensions = [fn[-3:].lower() for fn in files]
-            if any(extension in RAW_EXTENSIONS for extension in extensions):
-                if arguments.get("--move"):
-                    logger.debug("  Deleting file because another RAW file exists.")
-                    if not arguments.get("--dry-run"):
-                        os.remove(source)
+def recursive_walk(folder):
+    for folderName, subfolders, filenames in os.walk(folder):
+        logger.info("Source Folder: " + folderName)
+        for filename in filenames:
+            file_details = os.path.splitext(filename)
+            file_extension = file_details[1].lower()
+            # process only files with given extensions
+            if file_extension in extList:
+                moveFile(folderName, filename)
+        if subfolders:  # process nested folders
+            for subfolder in subfolders:
+                recursive_walk(subfolder)
+
+
+def moveFile(folder, filename):
+    fullpath = os.path.join(folder, filename)
+    cd = get_created_date(fullpath)
+    comment = 9 * " "
+    if not cd:
+        cd = datetime.datetime.fromtimestamp(os.path.getmtime(fullpath))
+        comment = " no EXIF "
+    created_date = cd.strftime("%Y_%m_%d")
+    space = 40 - len(filename)
+    if space <= 0:
+        space = 4
+    destf = os.path.join(destination_dir, created_date)
+    if not comment.isspace() and exifOnly == "yes":  # skip file processing
+        logger.info(f"  {filename}  {comment:>{space}}    skipped")
+    else:
+
+        flagM = "moved" if actMove == "yes" else "copied"
+        if (
+            exifOnly == "no"
+            or (exifOnly == "yes" and comment.isspace())
+            or (exifOnly == "fs" and not comment.isspace())
+        ):  # select by
+            if not os.path.isdir(destf):  # create subdir to c/move
+                os.makedirs(destf)
+                logger.info("created new destination subdir: " + destf)
+            if not os.path.exists(os.path.join(destf, filename)):
+                if actMove == "yes":
+                    shutil.move(fullpath, destf)
                 else:
-                    logger.debug("  Skipping file because another RAW file exists.")
-                continue
-
-        created_date = get_created_date(source)
-        logger.debug("  Creation date is %s." % created_date)
-
-        destination = os.path.join(
-            destination_dir, created_date.strftime(arguments["--date-format"])
-        )
-        if arguments["--event"]:
-            destination = os.path.join(destination, arguments["--event"])
-        if not os.path.isdir(destination) and not arguments.get("--dry-run"):
-            os.makedirs(destination)
-
-        dest_filename = os.path.join(destination, os.path.basename(source))
-        if os.path.exists(dest_filename):
-            logger.info(
-                "  Destination file %s already exists, skipping." % dest_filename
-            )
-            continue
-
-        if arguments.get("--move"):
-            logger.info("  Moving: %s -> %s..." % (source, destination))
-            if not arguments.get("--dry-run"):
-                shutil.move(source, destination)
-        else:
-            logger.info("  Copying: %s -> %s..." % (source, destination))
-            if not arguments.get("--dry-run"):
-                shutil.copy(source, destination)
+                    shutil.copy2(fullpath, destf)
+                # logger.info('copy/move error' + error)
+                logger.info(
+                    f"  {filename}  {comment:>{space}}  {str(cd)} {flagM:>3} {destf}"
+                )
+            else:
+                logger.info("  " + filename + " already exists in " + destf)
+        elif exifOnly == "fs" and comment.isspace():
+            logger.info(f"  {filename}  {comment:>{space}}    skipped")
 
 
 if __name__ == "__main__":
