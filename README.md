@@ -38,9 +38,9 @@ You run it with:
        
         python photocopy.py -j jpg Z:\photosync target/
         
-2. More complex. Move (-m yes) files by extensions shown from source (Z:\photosync) to target into folders   
+2. More complex. Move (-m yes) files by extensions (-j gif,png,jpg,mov,mp4) shown from source (Z:\photosync) to target into folders   
         named YYYY_MM_DD using the EXIF Creation Date in the files. File without EXIF date will use the file
-        system creation date to name target folders. Log everything.
+        system creation date (-x no -- means do not skip) to name target folders. Log everything.
         
         python photocopy.py -m yes -x no -j gif,png,jpg,mov,mp4 Z:\photosync target/
 
