@@ -11,21 +11,20 @@ Installation
 
 Just run:
 
-    pip install docopt
+    1. Clone down the repo, or just download `photocopy.py`
+    2. pip install docopt
+    3. pip install hachoir
+    4. Then execute the script using python.
 
-    pip install hachoir
-
-    Then execute the script using python.
-
-To install the software. You're ready to use it!
+You're ready to use it!
 
 
 Usage
 -----
-What photocopy does is read the EXIF data from images and copy the latter to a
-specified directory. The use case is that you have an SD card from your camera
-and want to copy all the images/videos into specific directories by day or
-month.
+Photocopy recursively reads the EXIF data from images and other file types (see below) in source directory and copies the files to a
+specified target directory with subdirectories for the creation dates of the files. It does not rename files. A use case is that 
+you have an SD card from your camera, or a folder from a remote syncing service, and want to copy all the images/videos into specific 
+directories by day.
 
 You run it with:
 
