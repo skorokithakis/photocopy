@@ -5,6 +5,8 @@
 Options:
   -h --help                Show this help and exit.
      --version             Show version and exit.
+  -t --today               Use today's date for all media instead of the media date, for when the media is
+                           dated incorrectly.
   -d --dry-run             Show what will happen.
   -j --ignore-jpg          Ignore (or delete when moving) JPG files when a RAW file with the same name exists.
   -e --event=EVENT         The name of the event in the photos. A subdirectory will be created for this event in the
@@ -13,7 +15,6 @@ Options:
   -f --date-format=FORMAT  The date format to use [default: %Y-%m-%d].
   -v --verbose             Talk more.
 """
-
 import datetime
 import glob
 import logging
@@ -103,7 +104,10 @@ def main(args=None):
                     logger.debug("  Skipping file because another RAW file exists.")
                 continue
 
-        created_date = get_created_date(source)
+        if arguments["--today"]:
+            created_date = datetime.datetime.now()
+        else:
+            created_date = get_created_date(source)
         logger.debug("  Creation date is %s." % created_date)
 
         destination = os.path.join(
