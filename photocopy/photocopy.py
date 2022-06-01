@@ -63,7 +63,7 @@ def get_created_date(filename):
     created_date = None
     parser = createParser(filename)
     if not parser:
-        logger.debug("Unable to parse file")
+        logger.debug("Unable to parse file for created date")
 
     with parser:
         try:
@@ -99,7 +99,7 @@ def main(args=None):
     set_up_logging(arguments)
     # job started
     logger.info(
-        50 * "-" + " Started: " + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        10 * "-" + "++ Started: " + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     )
     logger.debug("options: " + str(arguments))
     if not os.path.isdir(destination_dir):
@@ -112,7 +112,7 @@ def main(args=None):
         logger.info("source dir not exists: " + source_dir)
     # job ended
     logger.info(
-        70 * "-" + "Ended: " + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        10 * "_" + "** Ended: " + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     )
     logging.shutdown()
 
