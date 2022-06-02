@@ -65,7 +65,7 @@ Examples of log entries
  File Formats
  -------------
 
-This version of photocopy uses the [https://pypi.org/project/hachoir/] (hachoir) software to extract EXIF metadata. Hachoir supports the following 
+This version of photocopy uses the [https://pypi.org/project/hachoir/](hachoir) software to extract EXIF metadata. Hachoir supports the following 
 file formats as of version 3.1.3 in February 2021.
 
 #### Archive
