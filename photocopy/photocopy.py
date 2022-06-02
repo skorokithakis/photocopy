@@ -64,6 +64,7 @@ def get_created_date(filename):
     parser = createParser(filename)
     if not parser:
         logger.debug("Unable to parse file for created date")
+        return created_date
 
     with parser:
         try:
