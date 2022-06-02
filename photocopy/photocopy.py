@@ -100,7 +100,9 @@ def main(args=None):
     set_up_logging(arguments)
     # job started
     logger.info(
-        10 * "-" + "++ Started: " + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        10 * "-"
+        + "++ Started: "
+        + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     )
     logger.debug("options: " + str(arguments))
     if not os.path.isdir(destination_dir):
