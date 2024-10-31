@@ -6,6 +6,8 @@ It will prefer to use the EXIF date in the file. If not present it will skip fil
 (do not skip files without EXIF date) is passed in which case it will use file system creation date. All operations
 are logged into the target directory in a text file. 
 
+Note this is a major rewrite of the upstream project. TODO: It should be decoupled from it.
+
 Installation
 ------------
 
